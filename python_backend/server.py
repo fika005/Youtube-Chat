@@ -11,6 +11,15 @@ CORS(app)
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY')) 
 
 def extract_video_id(url):
+    """
+    Extract the video ID from a YouTube URL.
+
+    Args:
+        url (str): The YouTube URL.
+
+    Returns:
+        str: The extracted video ID, or an empty string if extraction fails.
+    """
     video_id = ""
     try:
         if "youtube.com" in url:
@@ -23,6 +32,14 @@ def extract_video_id(url):
 
 @app.route('/extractTranscript', methods=['POST'])
 def extract_transcript():
+    """
+    Extract the transcript from a YouTube video.
+
+    Expects a JSON payload with a 'url' key containing the YouTube video URL.
+
+    Returns:
+        JSON: A dictionary containing the extracted transcript or an error message.
+    """
     data = request.get_json()
     url = data.get('url')
 
@@ -38,6 +55,16 @@ def extract_transcript():
         return jsonify({'error': str(e)}), 500
 
 def get_gpt4_response(history, transcript):
+    """
+    Get a response from GPT-4 based on the chat history and video transcript.
+
+    Args:
+        history (str): The chat history.
+        transcript (str): The video transcript.
+
+    Returns:
+        str: The generated response from GPT-4.
+    """
     prompt = f"""
     You are an intelligent assistant. A user is asking questions based on the following transcript of a YouTube video:
     {transcript}
@@ -62,6 +89,14 @@ def get_gpt4_response(history, transcript):
 
 @app.route('/answerQuestion', methods=['POST'])
 def answer_question():
+    """
+    Answer a question based on the chat history and video transcript.
+
+    Expects a JSON payload with 'history' and 'transcript' keys.
+
+    Returns:
+        JSON: A dictionary containing the generated reply or an error message.
+    """
     data = request.get_json()
 
     history = data.get('history')

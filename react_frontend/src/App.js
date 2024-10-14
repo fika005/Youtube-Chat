@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import './App.css';
 
+/**
+ * Main App component for the YouTube video transcript chat application.
+ * @returns {JSX.Element} The rendered App component
+ */
 const App = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -9,6 +13,11 @@ const App = () => {
   const [videoTranscript, setVideoTranscript] = useState('');
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Extracts the video ID from a YouTube URL.
+   * @param {string} url - The YouTube video URL
+   * @returns {string} The extracted video ID or an empty string if extraction fails
+   */
   const extractVideoId = (url) => {
     let videoId = '';
     try {
@@ -25,6 +34,11 @@ const App = () => {
     return videoId;
   };
 
+  /**
+   * Fetches the transcript for a given YouTube video URL.
+   * @param {string} url - The YouTube video URL
+   * @returns {Promise<string>} The video transcript or an empty string if fetching fails
+   */
   const fetchTranscript = async (url) => {
     try {
       const response = await fetch('http://127.0.0.1:5000/extractTranscript', {
@@ -47,6 +61,9 @@ const App = () => {
     }
   };
 
+  /**
+   * Handles the submission of a video URL, fetches the transcript, and opens the chat.
+   */
   const handleSubmitVideoUrl = async () => {
     const videoId = extractVideoId(videoUrl);
     if (videoId) {
@@ -62,6 +79,9 @@ const App = () => {
     }
   };
 
+  /**
+   * Handles sending a user message to the backend for processing.
+   */
   const handleSendMessage = async () => {
     if (userMessage.trim() && videoTranscript) {
       const updatedMessages = [...messages, { text: userMessage, sender: 'user' }];
@@ -101,12 +121,20 @@ const App = () => {
     }
   };
 
+  /**
+   * Handles the 'Enter' key press event for the video URL input.
+   * @param {React.KeyboardEvent} e - The keyboard event
+   */
   const handleVideoUrlKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSubmitVideoUrl();
     }
   };
 
+  /**
+   * Handles the 'Enter' key press event for the message input.
+   * @param {React.KeyboardEvent} e - The keyboard event
+   */
   const handleMessageKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSendMessage();
